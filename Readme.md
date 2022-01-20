@@ -1,6 +1,6 @@
-#Ambientación del back Django
+# Ambientación del back Django
 
-##Instalación del recurso de restframework librerias
+## Instalación del recurso de restframework librerias
 ```bash 
 pip install djangorestframework
 ```
@@ -11,7 +11,7 @@ pip install markdown
 pip install dj ango-filter
 ```
 
-##Agregar la libreria a INSTALLED_APPS en settings
+## Agregar la libreria a INSTALLED_APPS en settings
 ```bash 
 'rest_framework',
 ```
