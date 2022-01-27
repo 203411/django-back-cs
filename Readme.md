@@ -8,11 +8,22 @@ pip install djangorestframework
 pip install markdown
 ```
 ```bash 
-pip install dj ango-filter
+pip install django-filter
+```
+```bash
+pip install virtualenv
+```
+```bash
+pip install psycopg2
+```
+```bash
+pip install python-dotenv
 ```
 
 ## Agregar la libreria a INSTALLED_APPS en settings
 ```bash 
 'rest_framework',
 ```
-
+```bash
+'rest_framework.authtoken',
+```
