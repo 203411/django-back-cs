@@ -9,30 +9,27 @@ from primerComponente.models import PrimerTabla
 #Importaciones de serializadores
 from primerComponente.serializers import PrimerTablaSerializer
 
-import json
-
 # Create your views here.
 class PrimerTablaList(APIView):
+    #Funciona aun sin el json.dumps y sin el json.loads
     def response_custom(self,messages,pay_load, status):
         responseX = {"messages":messages,"pay_load":pay_load,"status":status}
-        responseY = json.dumps(responseX)
-        responseOk = json.loads(responseY)
-        return responseOk
-    
+        # responseY = json.dumps(responseX)
+        # responseOk = json.loads(responseY)
+        return responseX
     
     def get(self, request, format=None):
         queryset = PrimerTabla.objects.all()
         serializer = PrimerTablaSerializer(queryset, many = True, context = {'request':request})
-        responseOk = self.response_custom("Success",serializer.data,status.HTTP_200_OK)
-        return Response(responseOk)
+        return Response(self.response_custom("Success",serializer.data, status.HTTP_200_OK))
     
     def post(self, request, format=None):
         serializer = PrimerTablaSerializer(data = request.data)
         if serializer.is_valid():
             serializer.save()
             datas = serializer.data
-            return Response(self.response_custom("Success",datas, status.HTTP_201_CREATED))
-        return Response(self.response_custom("Error", serializer.errors,status.HTTP_400_BAD_REQUEST))
+            return Response(self.response_custom("Success", datas,  status.HTTP_201_CREATED))
+        return Response(self.response_custom("Error",serializer.errors,status.HTTP_400_BAD_REQUEST))
     
 class PrimerTablaDetail(APIView):
     def get_object(self, pk):
