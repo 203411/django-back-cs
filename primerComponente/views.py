@@ -56,7 +56,7 @@ class PrimerTablaDetail(APIView):
     
     def delete(self, request,pk, format=None):
         idResponse = self.get_object(pk)
-        if idResponse != "No existe":
+        if idResponse != 0:
             idResponse.delete()
             return Response("Dato eliminado", status = status.HTTP_201_CREATED)
         return Response("Dato no encontrado",status = status.HTTP_400_BAD_REQUEST)
