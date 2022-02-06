@@ -5,7 +5,7 @@ from django.utils import timezone
 class LoadImage(models.Model):
     
     name_img = models.CharField(max_length=50, null = True)
-    url_img = models.ImageField(null=True,blank=True, default='', upload_to='assets/img/')
+    url_img = models.ImageField(null=True,blank=True, default='', upload_to='img/')
     format_img = models.CharField(max_length=50, null = True)
     created = models.DateTimeField(default = timezone.now)
     edited =  models.DateTimeField(blank=True, null=True, default=None) 

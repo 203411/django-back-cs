@@ -32,8 +32,6 @@ class LoadImageTable(APIView):
             validated_data = serializer.validated_data
             img = LoadImage(**validated_data)
             img.save()
-            # img.url_img =  '127.0.0.1:8000/' + str(img.image)
-            # img.save()
             serializer_response = LoadImageSerializers(img)
             return Response(serializer_response.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
