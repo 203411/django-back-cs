@@ -2,6 +2,7 @@ from django.shortcuts import render
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
+import datetime
 
 #Importaciones de modelos
 from primerComponente.models import PrimerTabla
@@ -48,6 +49,7 @@ class PrimerTablaDetail(APIView):
     def put(self, request,pk, format=None):
         idResponse = self.get_object(pk)
         serializer = PrimerTablaSerializer(idResponse, data = request.data)
+        request.data['edited'] = datetime.datetime.now()
         if serializer.is_valid():
             serializer.save()
             datas = serializer.data

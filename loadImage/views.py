@@ -5,7 +5,7 @@ from rest_framework.response import Response
 from rest_framework import status
 from rest_framework import exceptions
 import os.path
-
+import datetime
 #Importaciones de modelos
 from loadImage.models import LoadImage
 
@@ -58,6 +58,7 @@ class LoadImageTableDetail(APIView):
         name, formato = os.path.splitext(archivos.name)
         request.data['name_img'] = name
         request.data['format_img'] = formato
+        request.data['edited'] = datetime.datetime.now()
         serializer = LoadImageSerializers(idResponse, data = request.data)
         if serializer.is_valid():
             serializer.save()
