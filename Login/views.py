@@ -11,6 +11,12 @@ from rest_framework.permissions import AllowAny
 
 
 # Create your views here.
+
+class MyObtainTokenPairView(TokenObtainPairView):
+    permission_classes = (AllowAny,)
+    serializer_class = MyTokenObtainPairSerializer
+    
+
 class LoginAuth(ObtainAuthToken):
     def post(self, request, *args, **kwargs):
         serializer = self.serializer_class(data = request.data, context = {'request':request})
@@ -21,9 +27,9 @@ class LoginAuth(ObtainAuthToken):
         return Response({
             'token' : token.key,
             'user_id' : user.pk,
-            'email' : user.email
+            'username' : user.username,
+            'email' : user.email,
+            'first_name' : user.first_name,
+            'last_name' : user.last_name
         })
         
-class MyObtainTokenPairView(TokenObtainPairView):
-    permission_classes = (AllowAny,)
-    serializer_class = MyTokenObtainPairSerializer

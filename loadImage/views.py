@@ -70,6 +70,6 @@ class LoadImageTableDetail(APIView):
         imagen = self.get_object(pk)
         if imagen != 0:
             imagen.url_img.delete(save=True)
-            imagen.delete()
+            imagen.delete(save = True)
             return Response("Dato eliminado",status=status.HTTP_204_NO_CONTENT)
         return Response("Dato no encontrado",status = status.HTTP_400_BAD_REQUEST)
