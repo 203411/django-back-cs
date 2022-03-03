@@ -6,7 +6,7 @@ class ProfileSerializer(serializers.ModelSerializer):
     
     class Meta:
         model = Profile
-        fields = ('id_user','url_img')
+        fields = ('__all__')
         
     # def create(self, file, user):
     #     Profile.objects.create(
