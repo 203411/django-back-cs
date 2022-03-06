@@ -90,7 +90,7 @@ class ProfileTableDetail(APIView):
             return Response("Imagen eliminada",status=status.HTTP_204_NO_CONTENT)
         return Response("Imagen no encontrada",status = status.HTTP_400_BAD_REQUEST)
     
-class UserUpdate(APIView):
+class UserProfile(APIView):
     
     def res_custom(self, user, status):
         response = {
