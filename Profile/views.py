@@ -46,25 +46,12 @@ class ProfileTableDetail(APIView):
             return Profile.objects.get(id_user = pk)
         except Profile.DoesNotExist:
             return 404
-    def res_custom(self, user, data, status):
-        response = {
-            "first_name" : user[0]['first_name'],
-            "last_name" : user[0]['last_name'],
-            "username" : user[0]['username'],
-            "email" : user[0]['email'],
-            "id_user" : data.get('id_user'),
-            "url_img" : data.get('url_img'),
-            "status" : status
-        }
-        return response;
     
     def get(self, request, pk, format=None):
         idResponse = self.get_object(pk)
         if idResponse != 404:
             idResponse = ProfileSerializer(idResponse)
-            user = User.objects.filter(id=pk).values()
-            responseOK = self.res_custom(user,idResponse.data,status.HTTP_200_OK)
-            return Response(responseOK)
+            return Response(idResponse.data, status = status.HTTP_200_OK)
         return Response("No hay datos", status = status.HTTP_400_BAD_REQUEST)
     
     def put(self, request, pk, format=None):
@@ -100,24 +87,27 @@ class UserProfile(APIView):
             "email" : user[0]['email'],
             "status" : status
         }
-        return response;
+        return response
     
     def get(self, request, pk, format=None):
-        idResponse = User.objects.filter(id=pk).values()
-        if(idResponse != 404):
-            responseData = self.res_custom(idResponse, status.HTTP_200_OK)
+        user = User.objects.filter(pk=pk)
+        if(user != 404):
+            responseData = self.res_custom(user.values(), status.HTTP_200_OK)
             return Response(responseData)
-        return("No se encontró el usuario")
+        else:
+            return Response("User does not exist", status = status.HTTP_404_NOT_FOUND)
+        
     
     def put(self, request, pk, format=None):
         data = request.data
-        user = User.objects.filter(id = pk)
-        user.update(username = data.get('username'))
-        user.update(first_name = data.get('first_name'))
-        user.update(last_name = data.get('last_name'))
-        user.update(email = data.get('email'))
-        user2 = User.objects.filter(id=pk).values()
-        return Response(self.res_custom(user2, status.HTTP_200_OK))
-    
+        user = User.objects.filter(pk = pk)
+        if(user != 404):
+            user.update(username = data.get('username'))
+            user.update(first_name = data.get('first_name'))
+            user.update(last_name = data.get('last_name'))
+            user.update(email = data.get('email'))
+            return Response(self.res_custom(user.values(), status.HTTP_200_OK))
+        else:
+            return Response("User does not exist", status = status.HTTP_400_BAD_REQUEST)
 
         
