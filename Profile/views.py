@@ -15,9 +15,9 @@ from Profile.serializers import ProfileSerializer
 
 class ProfileTable(APIView):
 
-    def get_objectUser(self, idUser):
+    def get_objectUser(self, id_user):
         try:
-            return User.objects.get(pk = idUser)
+            return User.objects.get(pk = id_user)
         except User.DoesNotExist:
             return 404
     
@@ -25,8 +25,6 @@ class ProfileTable(APIView):
         if 'url_img' not in request.data:
             raise exceptions.ParseError(
                 "No has seleccionado el archivo a subir")
-        archivos = request.data['url_img']
-        idUser = request.data['id_user']
         user = self.get_objectUser(idUser)
         if(user != 404):
             serializer = ProfileSerializer(data=request.data)
@@ -48,24 +46,23 @@ class ProfileTableDetail(APIView):
             return 404
     
     def get(self, request, pk, format=None):
-        idResponse = self.get_object(pk)
-        if idResponse != 404:
-            idResponse = ProfileSerializer(idResponse)
-            return Response(idResponse.data, status = status.HTTP_200_OK)
+        id_response = self.get_object(pk)
+        if id_response != 404:
+            id_response = ProfileSerializer(id_response)
+            return Response(id_response.data, status = status.HTTP_200_OK)
         return Response("No hay datos", status = status.HTTP_400_BAD_REQUEST)
     
     def put(self, request, pk, format=None):
         archivos = request.data['url_img']
-        idResponse = self.get_object(pk)
-        if(idResponse != 404):
-            serializer = ProfileSerializer(idResponse)
+        id_response = self.get_object(pk)
+        if(id_response != 404):
             try:
                 os.remove('assets/'+str(idResponse.url_img))
             except os.error:
                 print("La imagen no existe")
-            idResponse.url_img = archivos
-            idResponse.save()
-            return Response("Todo kul",status.HTTP_201_CREATED)
+            id_response.url_img = archivos
+            id_response.save()
+            return Response("Todo bien",status.HTTP_201_CREATED)
         else:
             return Response("No salio bien")
     
@@ -92,8 +89,8 @@ class UserProfile(APIView):
     def get(self, request, pk, format=None):
         user = User.objects.filter(pk=pk)
         if(user != 404):
-            responseData = self.res_custom(user.values(), status.HTTP_200_OK)
-            return Response(responseData)
+            response_data = self.res_custom(user.values(), status.HTTP_200_OK)
+            return Response(response_data)
         else:
             return Response("User does not exist", status = status.HTTP_404_NOT_FOUND)
         

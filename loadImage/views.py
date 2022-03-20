@@ -27,7 +27,6 @@ class LoadImageTable(APIView):
         request.data['name_img'] = name
         request.data['format_img'] = formato
         serializer = LoadImageSerializers(data=request.data)
-        #return Response({'data': str(request.data)})    
         if serializer.is_valid():
             validated_data = serializer.validated_data
             img = LoadImage(**validated_data)
@@ -45,21 +44,21 @@ class LoadImageTableDetail(APIView):
             return 0
 
     def get(self, request,pk, format=None):
-        idResponse = self.get_object(pk)
-        if idResponse != 0:
-            idResponse = LoadImageSerializers(idResponse)
-            return Response(idResponse.data, status = status.HTTP_200_OK)
+        id_response = self.get_object(pk)
+        if id_response != 0:
+            id_response = LoadImageSerializers(id_response)
+            return Response(id_response.data, status = status.HTTP_200_OK)
         return Response("No hay datos", status = status.HTTP_400_BAD_REQUEST)
     
     
     def put(self, request,pk, format=None):
-        idResponse = self.get_object(pk)
+        id_response = self.get_object(pk)
         archivos = request.data['url_img']
         name, formato = os.path.splitext(archivos.name)
         request.data['name_img'] = name
         request.data['format_img'] = formato
         request.data['edited'] = datetime.datetime.now()
-        serializer = LoadImageSerializers(idResponse, data = request.data)
+        serializer = LoadImageSerializers(id_response, data = request.data)
         if serializer.is_valid():
             serializer.save()
             datas = serializer.data
