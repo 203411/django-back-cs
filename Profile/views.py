@@ -15,17 +15,17 @@ from Profile.serializers import ProfileSerializer
 
 class ProfileTable(APIView):
 
-    def get_objectUser(self, id_user):
+    def get_user(self, id_user,format=None):
         try:
             return User.objects.get(pk = id_user)
         except User.DoesNotExist:
             return 404
     
-    def post(self, request):
+    def post(self, request,format=None):
         if 'url_img' not in request.data:
             raise exceptions.ParseError(
                 "No has seleccionado el archivo a subir")
-        user = self.get_objectUser(idUser)
+        user = self.get_user(request.data['id_user'])
         if(user != 404):
             serializer = ProfileSerializer(data=request.data)
             if serializer.is_valid():
@@ -36,7 +36,7 @@ class ProfileTable(APIView):
                 return Response(serializer_response.data, status=status.HTTP_201_CREATED)
             return Response("Metodo post no permitido", status=status.HTTP_400_BAD_REQUEST)
         else:
-            return Response("User doesn't")
+            return Response("User doesn't exist")
     
 class ProfileTableDetail(APIView):
     def get_object(self, pk):
@@ -57,7 +57,7 @@ class ProfileTableDetail(APIView):
         id_response = self.get_object(pk)
         if(id_response != 404):
             try:
-                os.remove('assets/'+str(idResponse.url_img))
+                os.remove('assets/'+str(id_response.url_img))
             except os.error:
                 print("La imagen no existe")
             id_response.url_img = archivos
@@ -70,27 +70,25 @@ class ProfileTableDetail(APIView):
         profile = self.get_object(pk)
         if profile != 404:
             profile.url_img.delete(save=True)
-            # profile.delete(save=True)
             return Response("Imagen eliminada",status=status.HTTP_204_NO_CONTENT)
         return Response("Imagen no encontrada",status = status.HTTP_400_BAD_REQUEST)
     
 class UserProfile(APIView):
     
-    def res_custom(self, user, status):
+    def res_custom(self, user):
         response = {
             "first_name" : user[0]['first_name'],
             "last_name" : user[0]['last_name'],
             "username" : user[0]['username'],
-            "email" : user[0]['email'],
-            "status" : status
+            "email" : user[0]['email']
         }
         return response
     
     def get(self, request, pk, format=None):
         user = User.objects.filter(pk=pk)
         if(user != 404):
-            response_data = self.res_custom(user.values(), status.HTTP_200_OK)
-            return Response(response_data)
+            response_data = self.res_custom(user.values())
+            return Response(response_data, status= status.HTTP_200_OK)
         else:
             return Response("User does not exist", status = status.HTTP_404_NOT_FOUND)
         
@@ -103,7 +101,7 @@ class UserProfile(APIView):
             user.update(first_name = data.get('first_name'))
             user.update(last_name = data.get('last_name'))
             user.update(email = data.get('email'))
-            return Response(self.res_custom(user.values(), status.HTTP_200_OK))
+            return Response(self.res_custom(user.values()), status = status.HTTP_200_OK)
         else:
             return Response("User does not exist", status = status.HTTP_400_BAD_REQUEST)
 
